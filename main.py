@@ -1,24 +1,35 @@
 import string, os, random
 
 class Dict_generator:
-    def __init__(self):
-        self.generate('ascii',1,'qw')
 
-    def ascii(self)->string:
-        return string.printable
+    def english(self)->string:
+        printable =''
+        for i in range(0x0020, 0x007f):
+            printable += chr(i)
+        return printable
+
+    def chinese(self)->string:
+        printable = ''
+        for i in range(0x4e00, 0x9fbf):
+            printable += chr(i)
+        return printable
 
     def generate(self,type:string,size:int,out:string)-> string:
         set = ''
         inputer = open(out, 'w+')
 
-        if type == 'ascii' or 'ASCII':
-            set = self.ascii().split()
+        if type == 'english':
+            set = self.english()
 
-        while self.size_check(out) != size:
-            inputer.write(set[ random.randint(0, len(set)) ])
-        inputer.close()
+        if type == 'chinese':
+            set = self.chinese()
 
-    def size_check(self,path:str)->string:
-        return os.path.getsize(path)
+        while os.path.getsize(out) <= size:
+
+            inputer.write(set[ random.randint(0, len(set)-1) ])
+            inputer.close()
+            inputer = open(out, 'a+')
+        print(f'file size: {os.path.getsize(out)}\ntarget size:{size}')
 
 obj = Dict_generator()
+obj.generate('english',12,'/home/mickey/Desktop/test.txt')
